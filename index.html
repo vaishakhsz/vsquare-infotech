@@ -214,10 +214,7 @@
       white-space: nowrap;
     }
 
-    .vs-menu a:hover {
-      color: #0a1628;
-    }
-
+    /* Violet underline pseudo-element */
     .vs-menu a::after {
       content: '';
       position: absolute;
@@ -229,9 +226,29 @@
       transition: width 0.3s ease, left 0.3s ease;
     }
 
-    .vs-menu a:hover::after {
+    /* Dynamically switched active section underline */
+    .vs-menu a:not(.vs-menu-contact-btn).active {
+      color: #4f46e5;
+    }
+
+    .vs-menu a:not(.vs-menu-contact-btn).active::after {
       width: 80%;
       left: 10%;
+    }
+
+    /* Scoped hover for pointer devices to prevent sticky hover on touchscreens */
+    @media (hover: hover) {
+      .vs-menu a:not(.vs-menu-contact-btn):hover {
+        color: #4f46e5;
+      }
+      .vs-menu a:not(.vs-menu-contact-btn):hover::after {
+        width: 80%;
+        left: 10%;
+      }
+      .vs-menu-contact-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+      }
     }
 
     .vs-menu-contact-btn {
@@ -250,9 +267,13 @@
       white-space: nowrap;
     }
 
-    .vs-menu-contact-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+    .vs-menu-contact-btn::after {
+      display: none !important;
+    }
+
+    .vs-menu-contact-btn.active {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 0 4.5px #4f46e5, 0 8px 24px rgba(79, 70, 229, 0.5);
+      transform: translateY(-1px);
     }
 
     /* --- SECTIONS PADDING --- */
@@ -284,6 +305,9 @@
       transition: border-color 0.4s ease, box-shadow 0.4s ease;
       min-height: 260px;
       background: #e8edf5;
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+      mask-image: radial-gradient(white, black);
+      isolation: isolate;
     }
 
     /* 4-SLIDE SMOOTH TRACK WITH AI/ROBOT IMAGE */
@@ -431,6 +455,9 @@
       box-shadow: 0 25px 50px rgba(10, 22, 40, 0.06);
       transition: all 0.4s ease;
       background: #e8edf5;
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+      mask-image: radial-gradient(white, black);
+      isolation: isolate;
     }
 
     .about-grid-img-wrapper:hover {
@@ -1242,11 +1269,15 @@
       }
       .vs-hero {
         flex-direction: column;
+        align-items: stretch;
+        width: 100%;
         gap: 40px;
       }
       .vs-hero-slider-container, 
       .vs-card {
         width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
       .vs-card h1 {
         font-size: 38px;
@@ -1333,7 +1364,7 @@
       }
       .vs-menu a::after {
         bottom: 0px;
-        height: 1.5px;
+        height: 2px;
       }
       .vs-menu-contact-btn {
         font-size: 8px;
@@ -1357,10 +1388,12 @@
         margin-bottom: 40px;
       }
       .vs-hero-slider-container {
-        height: 260px;
+        height: 275px;
+        border-radius: 22px;
       }
       .about-grid-img-wrapper {
-        height: 240px;
+        height: 260px;
+        border-radius: 22px;
       }
       .vs-card h1 {
         font-size: 28px;
@@ -1412,6 +1445,10 @@
         padding: 3px 6px;
         letter-spacing: 0.3px;
       }
+      .vs-menu a::after {
+        bottom: -1px;
+        height: 1.5px;
+      }
       .vs-menu-contact-btn {
         font-size: 7px;
         padding: 3px 10px;
@@ -1421,12 +1458,12 @@
         padding: 100px 4% 40px;
       }
       .vs-hero-slider-container {
-        height: 210px;
-        border-radius: 18px;
+        height: 235px;
+        border-radius: 20px;
       }
       .about-grid-img-wrapper {
-        height: 200px;
-        border-radius: 18px;
+        height: 225px;
+        border-radius: 20px;
       }
       .vs-slide-content {
         bottom: 20px;
@@ -1502,6 +1539,10 @@
         font-size: 6px;
         padding: 2px 5px;
       }
+      .vs-menu a::after {
+        bottom: -1px;
+        height: 1.5px;
+      }
       .vs-menu-contact-btn {
         font-size: 6px;
         padding: 2px 8px;
@@ -1514,10 +1555,12 @@
         min-height: 50px;
       }
       .vs-hero-slider-container {
-        height: 180px;
+        height: 205px;
+        border-radius: 18px;
       }
       .about-grid-img-wrapper {
-        height: 170px;
+        height: 195px;
+        border-radius: 18px;
       }
       .vs-slide-content h2 {
         font-size: 18px;
@@ -1935,7 +1978,55 @@
   const bgOverlay = document.getElementById('bgOverlay');
   const navbar = document.getElementById('navbar');
   const maxScroll = 800;
+  const sections = document.querySelectorAll('.vs-section');
+  const navLinks = document.querySelectorAll('.vs-menu a');
 
+  function updateActiveNav() {
+    const scrollPosition = window.scrollY;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = window.innerHeight;
+
+    // If reached or nearly reached bottom of page, highlight Contact Us
+    if (scrollPosition + clientHeight >= scrollHeight - 80) {
+      navLinks.forEach(link => link.classList.remove('active'));
+      const contactBtn = document.querySelector('.vs-menu a[href="#contact"]');
+      if (contactBtn) contactBtn.classList.add('active');
+      return;
+    }
+
+    // Dynamic header height offset
+    const navOffset = navbar ? (navbar.offsetHeight + 70) : 160;
+    let currentId = '';
+
+    sections.forEach(section => {
+      const top = section.offsetTop - navOffset;
+      const height = section.offsetHeight;
+      if (scrollPosition >= top && scrollPosition < top + height) {
+        currentId = section.getAttribute('id');
+      }
+    });
+
+    // Default to 'home' when at the top of the page
+    if (!currentId && scrollPosition < (sections[0] ? sections[0].offsetTop : 300)) {
+      currentId = 'home';
+    }
+
+    if (currentId) {
+      navLinks.forEach(link => {
+        if (link.getAttribute('href') === `#${currentId}`) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+  }
+
+  // Initialize active state on load
+  updateActiveNav();
+
+  // Scroll listener with requestAnimationFrame throttling for fluid 60fps performance
+  let isNavUpdating = false;
   window.addEventListener('scroll', function() {
     const scrollPosition = window.scrollY;
     
@@ -1951,6 +2042,23 @@
         navbar.classList.remove('scrolled');
       }
     }
+
+    if (!isNavUpdating) {
+      window.requestAnimationFrame(function() {
+        updateActiveNav();
+        isNavUpdating = false;
+      });
+      isNavUpdating = true;
+    }
+  }, { passive: true });
+
+  // Add click handler to immediately highlight active link and blur mobile touch focus
+  navLinks.forEach(link => {
+    link.addEventListener('click', function() {
+      navLinks.forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+      this.blur();
+    });
   });
 </script>
 </body>
