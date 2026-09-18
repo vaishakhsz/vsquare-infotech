@@ -20,10 +20,21 @@
   <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
   <style>
-    html, body {
+    html {
       scroll-behavior: smooth;
       margin: 0;
       padding: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: clip;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: clip;
       background-color: #ffffff !important;
     }
 
@@ -34,9 +45,11 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      overflow-x: hidden;
+      overflow-x: clip;
       position: relative;
       min-height: 100vh;
+      width: 100%;
+      max-width: 100%;
     }
 
     #vsquare-site *, #vsquare-site *::before, #vsquare-site *::after {
@@ -305,9 +318,8 @@
       transition: border-color 0.4s ease, box-shadow 0.4s ease;
       min-height: 260px;
       background: #e8edf5;
-      -webkit-mask-image: -webkit-radial-gradient(white, black);
-      mask-image: radial-gradient(white, black);
       isolation: isolate;
+      contain: paint;
     }
 
     /* 4-SLIDE SMOOTH TRACK WITH AI/ROBOT IMAGE */
@@ -321,8 +333,10 @@
 
     .vs-slide {
       width: 25%;
+      min-width: 25%;
+      max-width: 25%;
+      flex: 0 0 25%;
       height: 100%;
-      flex-shrink: 0;
       position: relative;
       overflow: hidden;
     }
@@ -331,6 +345,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center;
       display: block;
     }
 
@@ -455,9 +470,8 @@
       box-shadow: 0 25px 50px rgba(10, 22, 40, 0.06);
       transition: all 0.4s ease;
       background: #e8edf5;
-      -webkit-mask-image: -webkit-radial-gradient(white, black);
-      mask-image: radial-gradient(white, black);
       isolation: isolate;
+      contain: paint;
     }
 
     .about-grid-img-wrapper:hover {
@@ -1271,6 +1285,7 @@
         flex-direction: column;
         align-items: stretch;
         width: 100%;
+        max-width: 100%;
         gap: 40px;
       }
       .vs-hero-slider-container, 
@@ -1278,6 +1293,7 @@
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
+        flex: none;
       }
       .vs-card h1 {
         font-size: 38px;
@@ -1328,6 +1344,9 @@
     }
 
     @media(max-width: 768px) {
+      .vs-tech-circle, .vs-tech-circle-2 {
+        display: none !important;
+      }
       .vs-navbar {
         min-height: 88px;
         padding: 6px 3%;
@@ -1613,7 +1632,7 @@
         <div class="vs-slider-track">
           <!-- Slide 1: Innovation (Original) -->
           <div class="vs-slide">
-            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&h=800&fit=crop" alt="Team collaboration" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&h=800&fit=crop" alt="Team collaboration" loading="eager" fetchpriority="high">
             <div class="vs-slide-content">
               <h2>🚀 Innovation</h2>
               <p>Cutting-edge technology solutions for modern businesses</p>
@@ -1621,7 +1640,7 @@
           </div>
           <!-- Slide 2: AI & Robotics (NEW requested AI/robot image) -->
           <div class="vs-slide">
-            <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1200&h=800&fit=crop" alt="AI & Robotics Intelligence" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1200&h=800&fit=crop" alt="AI & Robotics Intelligence" loading="eager">
             <div class="vs-slide-content">
               <h2>🤖 Intelligence</h2>
               <p>AI-driven automation and intelligent software runtimes</p>
@@ -1629,7 +1648,7 @@
           </div>
           <!-- Slide 3: Solutions (Original) -->
           <div class="vs-slide">
-            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&h=800&fit=crop" alt="Digital growth" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&h=800&fit=crop" alt="Digital growth" loading="eager">
             <div class="vs-slide-content">
               <h2>💡 Solutions</h2>
               <p>Custom software tailored to your unique needs</p>
@@ -1637,7 +1656,7 @@
           </div>
           <!-- Slide 4: Scale (Original) -->
           <div class="vs-slide">
-            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&h=800&fit=crop" alt="Technology development" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&h=800&fit=crop" alt="Technology development" loading="eager">
             <div class="vs-slide-content">
               <h2>⚡ Scale</h2>
               <p>Scalable infrastructure that grows with you</p>
